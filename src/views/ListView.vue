@@ -3,11 +3,13 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
 import VideoItem from '../components/VideoItem.vue'
+import { gsap } from 'gsap'
 
 const data = ref([])
 const isLoading = ref(false)
+const currentItem = ref({})
+const animDuration = 0.4
 
 const loadData = async () => {
   isLoading.value = true
@@ -36,26 +38,53 @@ const displayItems = () => {
   console.log("data", data.value)
 }
 
+const showItem = () => {
+  if(currentItem.value.id) {
+    gsap.to(currentItem.value, {...currentItem.value.attributes.data, duration: animDuration})
+    currentItem.value.style.zIndex = data.zIndex
+  }
+  const choosableItems = data.value.results.filter(item => item.id != currentItem.value.id)
+  const id = choosableItems[Math.floor(Math.random() * choosableItems.length)].id
+  currentItem.value = document.getElementById(id)
+  const anim = gsap.timeline()
+  currentItem.value.style.zIndex = 100
+  gsap.to(
+    currentItem.value, {
+      x: 0, 
+      y: 0, 
+      scale: 1.3, 
+      rotate: 0, 
+      duration: animDuration,
+    }
+  )
+  setTimeout(() => {
+    showItem()
+  }, 1000);
+}
+
+const onLoad = () => {
+  console.log("loaded")
+}
+
 
 onMounted(async () => {
+  window.addEventListener("load", onLoad);
   await loadData()
   const wrapper = document.getElementById('list')
-  const safeAreaPercentage = 0.7
-  const safeWidth = wrapper.clientWidth*safeAreaPercentage
-  const safeHeight = wrapper.clientHeight*safeAreaPercentage
   const items = document.querySelectorAll('.item');
-  console.log("safeWidth", safeWidth, "safeHeight", safeHeight, "items", items.length)
-  // place items randomly inside the wrapper
-  items.forEach(item => {
-    const x = (wrapper.clientWidth - safeWidth)/2 + Math.random() * (safeWidth/2)
-    const y = (wrapper.clientHeight - safeHeight)/2 + Math.random() * (safeHeight/2)
-    const scale = Math.random() * 0.5 + 0.5
-    // randomly rotate between -45 and 45 degrees
+  items.forEach((item, index) => {
+    const safeArea = .7
+    const x = -wrapper.clientWidth*safeArea/2 + Math.random() * wrapper.clientWidth*safeArea
+    const y = -wrapper.clientHeight*safeArea/2 + Math.random() * wrapper.clientHeight*safeArea
+    const scale = 0.3 + Math.random() * 0.3
     const rotate = Math.random() * 90 - 45
-    item.style.left = `${x}px`
-    item.style.top = `${y}px`
-    item.style.transform = `scale(${scale}) rotate(${rotate}deg)`
+    const zIndex = index
+    item.attributes.data = { x, y, scale, rotate, zIndex } // save initial position
+    gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4 })
   })
+  setTimeout(() => {
+    showItem()
+  }, 1000);
 })
 
 </script>
@@ -63,7 +92,7 @@ onMounted(async () => {
 <template>
   <div id="list">
     <div v-if="isLoading" id="loading">loading</div>
-    <VideoItem class="item" v-for="item in data.results" :key="item.id" :item="item" />
+    <VideoItem class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
 </template>
 
@@ -81,14 +110,10 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     position: relative;
-    
     .item {
+      transform-origin: center;
       position: absolute;
       width: 500px;
-      img {
-        width: 100%;
-        object-fit: cover;
-      }
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
   }

@@ -4,9 +4,22 @@ const props = defineProps(['item'])
 </script>
 
 <template>
-  <img :src="`https://picsum.photos/500/500?i=${item.id}`" alt="">
+  <div 
+    class="item" 
+    :id="item.id"
+    :style="{
+      backgroundImage: `url(https://source.unsplash.com/random/?${item.id})`,
+    }"
+  >
+  </div>
 </template>
 
 <style lang="scss" scoped>
-
+  .item {
+    width: 500px;
+    height: 500px;
+    border-radius: 5px;
+    background-position: center;
+    background-size: cover;
+  }
 </style>
