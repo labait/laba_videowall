@@ -5,7 +5,7 @@ const props = defineProps(['item'])
 </script>
 
 <template>
-  <img :src="item.img" alt="">
+  <img :src="`https://picsum.photos/500/500?i=${item.id}`" alt="">
 </template>
 
 <style lang="scss" scoped>

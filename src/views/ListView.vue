@@ -1,18 +1,21 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-
+import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import VideoItem from '../components/VideoItem.vue'
 
-const items = ref([])
+const data = ref([])
+const isLoading = ref(false)
 
-const loadItems = async () => {
-  // const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-  // const json = await response.json()
-  // items.value = json
-  items.value = Array.from(
+const loadData = async () => {
+  isLoading.value = true
+  /* test data
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+  const json = await response.json()
+  items.value = json
+  data.value = Array.from(
     { length: 10 }, 
     (_, i) => ({ 
       id: i, 
@@ -20,11 +23,17 @@ const loadItems = async () => {
       img: `https://picsum.photos/500/500?i=${i}`
     })
   )
+  return
+  */
+  const url = '/api/fetchNotion'
+  const response = await axios.get(url)
+  console.log(response.data)
+  data.value = response.data
+  isLoading.value = false
 }
 
 onMounted(async () => {
-  await loadItems()
-  //console.log(items.value)
+  await loadData()
   const wrapper = document.getElementById('items-wrapper')
   const width = wrapper.clientWidth
   const height = wrapper.clientHeight
@@ -46,17 +55,26 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="items-wrapper">
-    <VideoItem class="item" v-for="item in items" :key="item.id" :item="item" />
+  <div id="list">
+    <div id="items-wrapper">
+      <div v-if="isLoading" id="loading">loading</div>
+      <VideoItem class="item" v-for="item in data.results" :key="item.id" :item="item" />
+    </div>
   </div>
-
 </template>
 
 <style lang="scss" scoped>
+  #loading {
+    font-size: 6em;
+  }
+
   #items-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     position: relative;
     width: 800px;
-    background-color: #fafafa;
     height: 600px;
     .item {
       position: absolute;
