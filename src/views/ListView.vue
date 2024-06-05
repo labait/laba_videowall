@@ -39,15 +39,16 @@ const displayItems = () => {
 
 onMounted(async () => {
   await loadData()
-  const wrapper = document.getElementById('items-wrapper')
-  const width = wrapper.clientWidth
-  const height = wrapper.clientHeight
+  const wrapper = document.getElementById('list')
+  const safeAreaPercentage = 0.7
+  const safeWidth = wrapper.clientWidth*safeAreaPercentage
+  const safeHeight = wrapper.clientHeight*safeAreaPercentage
   const items = document.querySelectorAll('.item');
-  console.log("width", width, "height", height, "items", items.length)
+  console.log("safeWidth", safeWidth, "safeHeight", safeHeight, "items", items.length)
   // place items randomly inside the wrapper
   items.forEach(item => {
-    const x = Math.random() * (width - item.clientWidth)
-    const y = Math.random() * (height - item.clientHeight)
+    const x = (wrapper.clientWidth - safeWidth)/2 + Math.random() * (safeWidth/2)
+    const y = (wrapper.clientHeight - safeHeight)/2 + Math.random() * (safeHeight/2)
     const scale = Math.random() * 0.5 + 0.5
     // randomly rotate between -45 and 45 degrees
     const rotate = Math.random() * 90 - 45
@@ -61,10 +62,8 @@ onMounted(async () => {
 
 <template>
   <div id="list">
-    <div id="items-wrapper">
-      <div v-if="isLoading" id="loading">loading</div>
-      <VideoItem class="item" v-for="item in data.results" :key="item.id" :item="item" />
-    </div>
+    <div v-if="isLoading" id="loading">loading</div>
+    <VideoItem class="item" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
 </template>
 
@@ -73,14 +72,16 @@ onMounted(async () => {
     font-size: 6em;
   }
 
-  #items-wrapper {
+  #list {
+    border: 1px solid #ccc; 
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     position: relative;
-    width: 800px;
-    height: 600px;
+    
     .item {
       position: absolute;
       width: 500px;

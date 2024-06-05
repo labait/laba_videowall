@@ -6,7 +6,7 @@ import { useRouter, RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <nav class="mb-2">
+  <nav>
     <RouterLink to="/">List</RouterLink>
     <RouterLink to="/record">Record</RouterLink>
   </nav>
@@ -15,15 +15,22 @@ import { useRouter, RouterLink } from 'vue-router'
   </main>
 </template>
 
-<style scoped>
-main {
-
+<style >
+:root {
+  --menu-height: 50px;
 }
-
 nav {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: var(--menu-height);
   gap: 1rem;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100vh - var(--menu-height));
 }
 </style>
 
