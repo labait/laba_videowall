@@ -115,10 +115,10 @@ onMounted(async () => {
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-2">Record a video</h1>
         <div class="md:flex md:items-center mb-2">
-          <div class="md:w-2/6">
+          <div class="md:w-3/12">
             <label class="text-lg " for="autoConnect">Auto connect</label>
           </div>
-          <div class="md:w-4/6">
+          <div class="md:w-9/12">
             <input
               type="checkbox"
               id="autoConnect"
@@ -129,19 +129,19 @@ onMounted(async () => {
         </div>
         <div id="sources" class="mb-2">
           <div class="md:flex md:items-center mb-2">
-            <div class="md:w-2/6">
+            <div class="md:w-3/12">
               <label class="text-lg " for="source">Video</label>
             </div>
-            <div class="md:w-4/6">
+            <div class="md:w-9/12">
               <SelectSource :sources="sourcesVideo" v-model="sourceVideo" />
             </div>
           </div>
           <template v-if="sourceVideo">
             <div class="md:flex md:items-center mb-2">
-              <div class="md:w-2/6">
+              <div class="md:w-3/12">
                 <label class="text-lg " for="source">Audio</label>
               </div>
-              <div class="md:w-4/6">
+              <div class="md:w-9/12">
                 <SelectSource 
                   class="mb-1 inline-block" 
                   :sources="sourcesAudio" 
