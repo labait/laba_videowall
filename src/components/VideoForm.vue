@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, defineModel } from "vue";
 import SelectSource from "./SelectSource.vue";
 
+const autoConnect = ref(false);
 const videoFormat = "webm";
 const recording = ref(false);
 const recordingDatetimeStart = ref(null);
@@ -86,11 +87,17 @@ const stopRecording = () => {
   recording.value = false;
 };
 
+const setAutoConnect = () => {
+  localStorage.setItem("autoConnect", autoConnect.value);
+};
+
 onMounted(async () => {
   await getSources();
+  autoConnect.value = localStorage.getItem("autoConnect") === "true";
   const previousSourceVideo = localStorage.getItem("sourceVideo");
   const previousSourceAudio = localStorage.getItem("sourceAudio");
   if( 
+    autoConnect.value &&
     previousSourceVideo && previousSourceAudio
     && sourcesVideo.value.find((source) => source.deviceId === previousSourceVideo)
     && sourcesAudio.value.find((source) => source.deviceId === previousSourceAudio)
@@ -107,21 +114,34 @@ onMounted(async () => {
     <div class="w-2/3">
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-2">Record a video</h1>
+        <div class="md:flex md:items-center mb-2">
+          <div class="md:w-2/6">
+            <label class="text-lg " for="autoConnect">Auto connect</label>
+          </div>
+          <div class="md:w-4/6">
+            <input
+              type="checkbox"
+              id="autoConnect"
+              v-model="autoConnect"
+              @change="setAutoConnect"
+            />
+          </div>
+        </div>
         <div id="sources" class="mb-2">
           <div class="md:flex md:items-center mb-2">
-            <div class="md:w-1/5">
+            <div class="md:w-2/6">
               <label class="text-lg " for="source">Video</label>
             </div>
-            <div class="md:w-4/5">
+            <div class="md:w-4/6">
               <SelectSource :sources="sourcesVideo" v-model="sourceVideo" />
             </div>
           </div>
           <template v-if="sourceVideo">
             <div class="md:flex md:items-center mb-2">
-              <div class="md:w-1/5">
+              <div class="md:w-2/6">
                 <label class="text-lg " for="source">Audio</label>
               </div>
-              <div class="md:w-4/5">
+              <div class="md:w-4/6">
                 <SelectSource 
                   class="mb-1 inline-block" 
                   :sources="sourcesAudio" 
