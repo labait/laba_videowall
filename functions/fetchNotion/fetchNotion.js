@@ -1,6 +1,6 @@
 import { Client } from "@notionhq/client";
 
-// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
+// https://www.youtube.com/watch?v=qcQYA6QZFww
 const handler = async (event) => {
   try {
     // const subject = event.queryStringParameters.name || 'World'
