@@ -9,7 +9,7 @@ import { gsap } from 'gsap'
 const data = ref([])
 const isLoading = ref(false)
 const currentItem = ref({})
-const animDuration = 0.4
+const animDuration = 0.5
 
 const loadData = async () => {
   isLoading.value = true
@@ -54,12 +54,13 @@ const showItem = () => {
       y: 0, 
       scale: 1.3, 
       rotate: 0, 
+      opacity: 1,
       duration: animDuration,
     }
   )
   setTimeout(() => {
     showItem()
-  }, 1000);
+  }, animDuration * 1000 * 3); // todo
 }
 
 const onLoad = () => {
@@ -80,7 +81,9 @@ onMounted(async () => {
     const rotate = Math.random() * 90 - 45
     const zIndex = index
     item.attributes.data = { x, y, scale, rotate, zIndex } // save initial position
-    gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4 })
+    gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
+      //todo
+    }})
   })
   setTimeout(() => {
     showItem()
@@ -98,11 +101,12 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
   #loading {
-    font-size: 6em;
+    font-size: 10vw;
+    color: white;
+    letter-spacing:-0.05em;
   }
 
   #list {
-    border: 1px solid #ccc; 
     height: 100%;
     width: 100%;
     display: flex;
@@ -114,7 +118,7 @@ onMounted(async () => {
       transform-origin: center;
       position: absolute;
       width: 500px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 20px 30px 10px rgba(0, 0, 0, .3);
     }
   }
 </style>

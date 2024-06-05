@@ -8,7 +8,7 @@ const props = defineProps(['item'])
     class="item" 
     :id="item.id"
     :style="{
-      backgroundImage: `url(https://source.unsplash.com/random/?${item.id})`,
+      backgroundImage: `url(https://source.unsplash.com/random/?bw&${item.id})`,
     }"
   >
   </div>
@@ -21,5 +21,6 @@ const props = defineProps(['item'])
     border-radius: 5px;
     background-position: center;
     background-size: cover;
+    border-radius: 50%;
   }
 </style>
