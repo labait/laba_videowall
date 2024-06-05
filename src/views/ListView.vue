@@ -32,6 +32,11 @@ const loadData = async () => {
   isLoading.value = false
 }
 
+const displayItems = () => {
+  console.log("data", data.value)
+}
+
+
 onMounted(async () => {
   await loadData()
   const wrapper = document.getElementById('items-wrapper')
