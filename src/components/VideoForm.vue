@@ -52,6 +52,10 @@ const setupRecording = async () => {
   video.srcObject = stream;
   video.volume = 0;
   await video.play();
+
+  // set video and audio sources in local storage to re-use them
+  localStorage.setItem("sourceVideo", sourceVideo.value);
+  localStorage.setItem("sourceAudio", sourceAudio.value);
 };
 
 
@@ -84,29 +88,40 @@ const stopRecording = () => {
 
 onMounted(async () => {
   await getSources();
+  const previousSourceVideo = localStorage.getItem("sourceVideo");
+  const previousSourceAudio = localStorage.getItem("sourceAudio");
+  if( 
+    previousSourceVideo && previousSourceAudio
+    && sourcesVideo.value.find((source) => source.deviceId === previousSourceVideo)
+    && sourcesAudio.value.find((source) => source.deviceId === previousSourceAudio)
+  ) {
+    sourceVideo.value = previousSourceVideo;
+    sourceAudio.value = previousSourceAudio;
+    setupRecording();
+  }
 });
 </script>
 
 <template>
   <div class="flex justify-center">
-    <div class="w-1/2">
+    <div class="w-2/3">
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-2">Record a video</h1>
         <div id="sources" class="mb-2">
           <div class="md:flex md:items-center mb-2">
-            <div class="md:w-1/4">
+            <div class="md:w-1/5">
               <label class="text-lg " for="source">Video</label>
             </div>
-            <div class="md:w-3/4">
+            <div class="md:w-4/5">
               <SelectSource :sources="sourcesVideo" v-model="sourceVideo" />
             </div>
           </div>
           <template v-if="sourceVideo">
             <div class="md:flex md:items-center mb-2">
-              <div class="md:w-1/4">
+              <div class="md:w-1/5">
                 <label class="text-lg " for="source">Audio</label>
               </div>
-              <div class="md:w-3/4">
+              <div class="md:w-4/5">
                 <SelectSource 
                   class="mb-1 inline-block" 
                   :sources="sourcesAudio" 
