@@ -1,22 +1,29 @@
 <script setup>
-import VideoForm from "./components/VideoForm.vue";
+import { useRouter, RouterLink } from 'vue-router'
+
+//const router = useRouter();
+//router.push('/flipbook') // redirect to flipbook view
 </script>
 
 <template>
-  <VideoForm></VideoForm>
+  <nav class="mb-2">
+    <RouterLink to="/">List</RouterLink>
+    <RouterLink to="/record">Record</RouterLink>
+  </nav>
+  <main class=" flex flex-col items-center">
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+main {
+
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 </style>
+

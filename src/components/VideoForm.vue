@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, defineModel } from "vue";
+import { ref, onMounted, computed, defineModel, watch } from "vue";
 import SelectSource from "./SelectSource.vue";
 
 const autoConnect = ref(false);
@@ -23,6 +23,7 @@ const sourceAudio = defineModel("sourceAudio", {
 });
 
 const getSources = async () => {
+  //navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   const devices = await navigator.mediaDevices.enumerateDevices();
   sourcesVideo.value = devices.filter((device) => device.kind === "videoinput");
   sourcesAudio.value = devices.filter((device) => device.kind === "audioinput");
@@ -107,6 +108,12 @@ onMounted(async () => {
     setupRecording();
   }
 });
+
+watch(sourceAudio, async () => {
+  if(sourceVideo.value && sourceAudio.value) {
+    await setupRecording();
+  }
+});
 </script>
 
 <template>
@@ -146,7 +153,6 @@ onMounted(async () => {
                   class="mb-1 inline-block" 
                   :sources="sourcesAudio" 
                   v-model="sourceAudio"
-                  @update:modelValue="setupRecording" 
                 />
               </div>
             </div>
@@ -154,6 +160,7 @@ onMounted(async () => {
         </div>
 
         <div id="video" class="mb-2"></div>
+        
         <template v-if="sourceVideo && sourceAudio">
           <button @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
             {{ recording ? "Stop recording" : "Record video" }}
