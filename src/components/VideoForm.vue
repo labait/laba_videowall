@@ -23,7 +23,7 @@ const sourceAudio = defineModel("sourceAudio", {
 });
 
 const getSources = async () => {
-  //navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   const devices = await navigator.mediaDevices.enumerateDevices();
   sourcesVideo.value = devices.filter((device) => device.kind === "videoinput");
   sourcesAudio.value = devices.filter((device) => device.kind === "audioinput");
@@ -94,6 +94,7 @@ const setAutoConnect = () => {
 
 onMounted(async () => {
   await getSources();
+  return
   autoConnect.value = localStorage.getItem("autoConnect") === "true";
   const previousSourceVideo = localStorage.getItem("sourceVideo");
   const previousSourceAudio = localStorage.getItem("sourceAudio");
