@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",
+    "airtable": "^0.12.2",
+    "aws-sdk": "^2.1637.0",
     "axios": "^1.7.2",
     "gsap": "^3.12.5",
     "vue": "^3.4.21",

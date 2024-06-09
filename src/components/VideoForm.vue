@@ -93,8 +93,8 @@ const setAutoConnect = () => {
 };
 
 onMounted(async () => {
-  await getSources();
-  return
+  //return
+  await getSources()
   autoConnect.value = localStorage.getItem("autoConnect") === "true";
   const previousSourceVideo = localStorage.getItem("sourceVideo");
   const previousSourceAudio = localStorage.getItem("sourceAudio");

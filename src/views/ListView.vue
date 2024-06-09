@@ -27,7 +27,7 @@ const loadData = async () => {
   )
   return
   */
-  const url = '/api/fetchNotion'
+  const url = '/api/list'
   const response = await axios.get(url)
   console.log(response.data)
   data.value = response.data

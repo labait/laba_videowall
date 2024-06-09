@@ -6,7 +6,7 @@ import { useRouter, RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <video autoplay="" loop="" muted="" playsinline="" id="background-video">
+  <video v-show="false" autoplay="" loop="" muted="" playsinline="" id="background-video">
       <!-- video esportati con codec mp4 e webm -->
       <source src="/videos/background.mp4" type="video/mp4">
       <source src="/videos/background.webm" type="video/webm">
