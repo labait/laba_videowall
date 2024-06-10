@@ -86,6 +86,8 @@ const setupRecording = async () => {
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
   await video.play();
 
   // set video and audio sources in local storage to re-use them
