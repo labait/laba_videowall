@@ -1,17 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 const props = defineProps(['item'])
+
+const videoUrl = computed(() => {
+  return props.item.properties.video.files[0].external.url
+})
+
 </script>
 
 <template>
-  <div 
+  <video 
     class="item" 
     :id="item.id"
-    :style="{
-      backgroundImage: `url(https://source.unsplash.com/random/?bw&${item.id})`,
-    }"
+    :src="videoUrl"
   >
-  </div>
+  </video>
 </template>
 
 <style lang="scss" scoped>
@@ -22,5 +25,7 @@ const props = defineProps(['item'])
     background-position: center;
     background-size: cover;
     border-radius: 50%;
+    object-fit: cover;
   }
 </style>
+

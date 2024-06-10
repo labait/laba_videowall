@@ -6,14 +6,14 @@ import { useRouter, RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <video v-show="false" autoplay="" loop="" muted="" playsinline="" id="background-video">
+  <video v-show="true" autoplay="" loop="" muted="" playsinline="" id="background-video">
       <!-- video esportati con codec mp4 e webm -->
       <source src="/videos/background.mp4" type="video/mp4">
       <source src="/videos/background.webm" type="video/webm">
       <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
       <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
   </video>
-  <nav>
+  <nav v-if="false">
     <RouterLink to="/">List</RouterLink>
     <RouterLink to="/record">Record</RouterLink>
   </nav>
@@ -43,11 +43,35 @@ nav {
   height: var(--menu-height);
   gap: 1rem;
 }
+
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: calc(100vh - var(--menu-height));
+}
+
+#message, #instructions {
+  color: white;
+  letter-spacing:-0.05em;
+  text-align: center; 
+  line-height: 0.9em;
+  cursor: pointer;
+}
+
+#message {
+  overflow-wrap: break-word;
+  font-size: 8vw;
+  color: white;
+  letter-spacing:-0.05em;
+  text-align: center;
+  z-index: 101;
+}
+
+#instructions {
+  font-size: 4vw;
+  position: absolute;
+  bottom: 60px;
 }
 </style>
 

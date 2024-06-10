@@ -8,27 +8,27 @@ const handler = async (event) => {
   try {
     let response = {}
     response = {}
-    // list all the records from airtbale base
+    /* list all the records from airtbale base
     const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE_ID);
     response = await base(process.env.AIRTABLE_TABLE_ID).select({
       maxRecords: 50,
       view: "Grid view"
     }).firstPage();
+    */
 
-    /* const subject = event.queryStringParameters.name || 'World'
+    /* const subject = event.queryStringParameters.name || 'World'*/ 
     const {NOTION_KEY, NOTION_DB} = process.env;
-
     const notion = new Client({ auth: NOTION_KEY });
     response = await notion.databases.query({
       database_id: NOTION_DB,
       filter: {
-        property: 'status',
+        property: 'state',
         select: {
           equals: 'published',
         },
       }
     });
-    */ 
+    
 
     return {
       statusCode: 200,

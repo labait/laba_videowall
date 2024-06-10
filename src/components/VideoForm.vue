@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted, computed, defineModel, watch } from "vue";
+import axios from 'axios'
 import SelectSource from "./SelectSource.vue";
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const autoConnect = ref(false);
 const videoFormat = "webm";
@@ -50,6 +54,7 @@ const setupRecording = async () => {
   const videoDiv = document.getElementById("video");
   const video = document.createElement("video");
   videoDiv.innerHTML = "";
+  videoDiv.style.transform = 'scale(-1, 1)';
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
@@ -60,20 +65,40 @@ const setupRecording = async () => {
   localStorage.setItem("sourceAudio", sourceAudio.value);
 };
 
+// async function to convert a blob to base64
+const blobToBase64 = async (blob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+  });
+};
+
 
 const startRecording = async () => {
   const chunks = [];
   recorder = new MediaRecorder(stream);   
   recorder.ondataavailable = (e) => chunks.push(e.data);
-  recorder.onstop = (e) => {
+  recorder.onstop = async (e) => {
     const blob = new Blob(chunks, { type: `video/${videoFormat}` });
     const url = URL.createObjectURL(blob);
+    const response = await axios.post("/api/create", {
+      message: "test video",
+      sender: "test sender",
+      video: await blobToBase64(blob),
+    });
+    console.log("response", response);
+    router.push("/");
+    /*
     const a = document.createElement("a");
     document.body.appendChild(a);
     a.href = url;
     a.download = `video.${videoFormat}`;
     a.click();
     window.URL.revokeObjectURL(url);
+    */
   };
   recorder.start();
   recordingDatetimeStart.value = new Date();
@@ -118,10 +143,10 @@ watch(sourceAudio, async () => {
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center align-middle h-screen ">
     <div class="w-2/3">
       <div class="p-4">
-        <h1 class="text-2xl font-bold mb-2">Record a video</h1>
+        <h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>
         <div class="md:flex md:items-center mb-2">
           <div class="md:w-3/12">
             <label class="text-lg " for="autoConnect">Auto connect</label>
@@ -175,5 +200,5 @@ watch(sourceAudio, async () => {
   </div>
 </template>
 
-<style lang="">
+<style lang="scss" scoped>
 </style>

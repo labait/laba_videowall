@@ -1,20 +1,77 @@
 import { Client } from "@notionhq/client";
 const fs = require('fs');
+import Busboy from "busboy"
 const AWS = require('aws-sdk');
+
+function parseMultipartForm(event) {
+  return new Promise((resolve) => {
+    // we'll store all form fields inside of this
+    const fields = {};
+
+    // let's instantiate our busboy instance!
+    const busboy = new Busboy({
+      // it uses request headers
+      // to extract the form boundary value (the ----WebKitFormBoundary thing)
+      headers: event.headers
+    });
+
+    // before parsing anything, we need to set up some handlers.
+    // whenever busboy comes across a file ...
+    busboy.on(
+      "file",
+      (fieldname, filestream, filename, transferEncoding, mimeType) => {
+        // ... we take a look at the file's data ...
+        filestream.on("data", (data) => {
+          // ... and write the file's name, type and content into `fields`.
+          fields[fieldname] = {
+            filename,
+            type: mimeType,
+            content: data,
+          };
+        });
+      }
+    );
+
+    // whenever busboy comes across a normal field ...
+    busboy.on("field", (fieldName, value) => {
+      // ... we write its value into `fields`.
+      fields[fieldName] = value;
+    });
+
+    // once busboy is finished, we resolve the promise with the resulted fields.
+    busboy.on("finish", () => {
+      resolve(fields)
+    });
+
+    // now that all handlers are set up, we can finally start processing our request!
+    busboy.write(event.body);
+  });
+}
+
 
 const handler = async (event) => {
   try {
+    const default_state = 'published';
     // check if method is POST and that the body contains a message
     if (event.httpMethod !== 'POST' || !event.body) {
       return { statusCode: 400, body: 'Bad Request' }
     }
-    const data = JSON.parse(event.body)
-
     let bucket_base_url = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.S3_REGION}.amazonaws.com/`
     let response = {}
-    // gest test video reading file public/assets/test.webm
-    const video = fs.readFileSync('public/assets/test.webm');
-    // generate filename based on timestamp and random number
+
+    /* get values from post json*/
+    let {message, sender, video} = JSON.parse(event.body)
+    video = Buffer.from(video.replace(/^data:.+;base64,/, ""), 'base64');
+    /* video = fs.readFileSync('public/assets/test.webm'); // using test video */
+    
+
+    /* get values from post form 
+    const fields = await parseMultipartForm(event)
+    message = fields.message
+    sender = fields.sender
+    video = fields.video.content
+    */
+
     const basename = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
     const format_input = 'webm';
     const format_output = 'mp4';
@@ -72,14 +129,14 @@ const handler = async (event) => {
         },
         state: {
           select: {
-            name: "created",
+            name: default_state,
           }
         },
         message: {
           rich_text: [
             {
               text: {
-                content: data.message,
+                content: message,
               }
             }
           ]
@@ -88,7 +145,7 @@ const handler = async (event) => {
           rich_text: [
             {
               text: {
-                content: data.sender,
+                content: sender,
               }
             }
           ]
