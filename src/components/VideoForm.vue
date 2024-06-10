@@ -144,7 +144,7 @@ watch(sourceAudio, async () => {
 
 <template>
   <div class="flex items-center justify-center h-screen w-full">
-    <div class="px-4 py-4 w-full max-w-lg">
+    <div class="px-4 py-4 w-full max-w-lg min-w-80">
       <!--<h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>-->
       <form action="" class="p-0">
         <div class="bg-white rounded-lg p-4">
@@ -161,8 +161,8 @@ watch(sourceAudio, async () => {
               />
             </div>
           </div>
-          <div id="sources" class="mt-2">
-            <div class="flex items-center mb-2">
+          <div id="sources" class="mt-4">
+            <div class="flex items-center">
               <div class="w-4/12 pr-3">
                 <label class="" for="source">Video</label>
               </div>
@@ -171,45 +171,45 @@ watch(sourceAudio, async () => {
               </div>
             </div>
             <template v-if="sourceVideo">
-              <div class="flex items-center mt-2">
+              <div class="flex items-center mt-4">
                 <div class="w-4/12 pr-3">
                   <label class="" for="source">Audio</label>
                 </div>
                 <div class="w-8/12">
-                  <SelectSource 
-                    class="mb-1 inline-block" 
-                    :sources="sourcesAudio" 
-                    v-model="sourceAudio"
-                  />
+                  <SelectSource :sources="sourcesAudio" v-model="sourceAudio" />
                 </div>
               </div>
             </template>
           </div>
         </div>
 
-        <div id="video" class="bg-white/50 rounded-lg overflow-hidden my-4"></div>
+        <div id="video" class="bg-white/25 relative rounded-lg overflow-hidden my-4 relative">
+          <span class="absolute top-1/2 -translate-y-1/2 text-black/65 text-2xl text-center w-full">Choose video and audio source</span>
+        </div>
         
         <div class="bg-white rounded-lg p-4">
-          <div class="mb-4">
+          <div>
             <label for="sender" class="block leading-6 text-gray-900">Sender</label>
             <div class="mt-2">
-              <input type="sender" name="email" id="email" class="block w-full rounded-md border-0 p-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600" placeholder="you@example.com" aria-describedby="email-description">
+              <input type="sender" name="email" id="email" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600" placeholder="you@example.com" aria-describedby="email-description">
             </div>
           </div>
-        
-          <label for="message" class="block leading-6 text-gray-900">Add your message</label>
+
+          <div class="mt-4">
+            <label for="message" class="block leading-6 text-gray-900">Add your message</label>
             <div class="mt-2">
-              <textarea rows="3" name="message" class="block w-full rounded-md border-0 p-4 mb-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
+              <textarea rows="2" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
             </div>
+          </div>
           
-          <template v-if="sourceVideo && sourceAudio">
-            <button type="submit" @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
+          <!-- <template v-if="sourceVideo && sourceAudio">
+            <button type="submit" @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 py-2 rounded w-full">
               {{ recording ? "Stop recording" : "Record video" }}
             </button>
             <div v-if="recording" class="inline">
               <span>{{ recordingInfo }}</span>
             </div>
-          </template>
+          </template> -->
         </div>
       </form>
     </div>
@@ -220,7 +220,7 @@ watch(sourceAudio, async () => {
     id="instructions"
     @click="() => router.push('/')"
   >
-    go back to list...
+    Go back to list...
   </a>
 </template>
 
