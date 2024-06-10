@@ -52,7 +52,7 @@ main {
   height: calc(100vh - var(--menu-height));
 }
 
-#message, #instructions {
+#actionPrimary, #actionSecondary {
   color: white;
   letter-spacing:-0.05em;
   text-align: center; 
@@ -60,7 +60,7 @@ main {
   cursor: pointer;
 }
 
-#message {
+#actionPrimary {
   overflow-wrap: break-word;
   font-size: 8vw;
   color: white;
@@ -69,7 +69,7 @@ main {
   z-index: 101;
 }
 
-#instructions {
+#actionSecondary {
   font-size: 4vw;
   position: absolute;
   bottom: 3rem;

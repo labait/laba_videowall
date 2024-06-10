@@ -8,18 +8,18 @@ import { gsap } from 'gsap'
 
 const data = ref({results: []})
 const state = ref("loaded")
-const message = ref('')
-const instructions = ref('click again to record')
+const actionPrimary = ref('')
+const actionSecondary = ref('click to record')
 const currentItem = ref(null)
 const currentVideo = ref(null)
 const animDuration = 0.5
 
 const loadData = async () => {
-  message.value = "loading"
+  actionPrimary.value = "loading"
   const url = '/api/list'
   const response = await axios.get(url)
   data.value = response.data
-  message.value = ""
+  actionPrimary.value = ""
 }
 
 
@@ -29,14 +29,14 @@ const showItem = () => {
     state.value = "empty"
     return
   }
-  message.value = ""
+  actionPrimary.value = ""
   console.log(currentVideo?.value?.id)
   if(currentVideo?.value?.id) {
     gsap.to(currentVideo.value, {...currentVideo.value.attributes.data, duration: animDuration})
     currentVideo.value.style.zIndex = data.zIndex
+    document.getElementById(currentVideo.value.getAttribute('id')).pause()
   }
   const choosableItems = data.value.results.filter(item => item.id != (currentVideo.value ? currentVideo.value.id : null))
-  console.log("choosableItems", toRaw(choosableItems))
   currentItem.value = choosableItems[Math.floor(Math.random() * choosableItems.length)]
   const id = currentItem.value.id
   currentVideo.value = document.getElementById(id)
@@ -51,16 +51,12 @@ const showItem = () => {
       opacity: 1,
       duration: animDuration,
       onComplete: () => {
-        message.value = currentItem.value.properties.message.rich_text[0].plain_text;
-        // get video element with id
-        const id = currentVideo.value.getAttribute('id');
-        const video = document.getElementById(id)
+        actionPrimary.value = currentItem.value.properties.message.rich_text[0].plain_text;
+        const video = document.getElementById(currentVideo.value.getAttribute('id'))
         video.play()
-        // execute when video ends
         video.onended = () => {
           showItem()
         }
-
       }
     }
   )  
@@ -82,18 +78,20 @@ onMounted(async () => {
     const zIndex = index
     item.attributes.data = { x, y, scale, rotate, zIndex } // save initial position
     gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
-      message.value = "click to start"
+      actionPrimary.value = "click to start"
     }})
   })
 })
 
-const handleClick = () => {
+const handleClickPrimary = () => {
   switch (state.value) {
     case "loaded":
       state.value = "started"
       showItem()
       break;
     case "started": 
+      showItem()
+      break;
     case "empty": 
       router.push("/record")
     default:
@@ -101,25 +99,30 @@ const handleClick = () => {
   }
 }
 
+
+const handleClickSecondary = () => {
+  router.push("/record")
+}
+
 </script>
 
 <template>
   <div id="list">
     <a 
-      id="message" 
+      id="actionPrimary" 
       href="#"
       class="block w-7/12 text-center"
-      @click="handleClick"
-    >{{ message }}</a>
+      @click="handleClickPrimary"
+    >{{ actionPrimary }}</a>
     <VideoItem class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
   <a 
     v-if="currentItem || data.results.length == 0" 
-    id="instructions"
+    id="actionSecondary"
     href="#"
-    @click="handleClick"
+    @click="handleClickSecondary"
   >
-    {{ instructions }}
+    {{ actionSecondary }}
   </a>
 </template>
 

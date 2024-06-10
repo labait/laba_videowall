@@ -247,13 +247,6 @@ watch(sourceAudio, async () => {
     </div>
 
   </div>
-  <a 
-    href="" 
-    id="instructions"
-    @click="() => router.push('/')"
-  >
-    Go back to list...
-  </a>
 </template>
 
 <style lang="scss" scoped>
