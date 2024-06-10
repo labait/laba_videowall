@@ -3,20 +3,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import VideoForm from "../components/VideoForm.vue";
+import Action from '../components/Action.vue';
+
 </script>
 
 <template>
   <VideoForm></VideoForm>
-  <a 
-    href="" 
-    id="actionSecondary"
-    @click="(event) => {
-      event.preventDefault();
-      router.push('/')
-    }"
-  >
-    Go back to list...
-  </a>
+  <Action id="actionSecondary" text="Go back to list..." @click="() => router.push('/')"/>
 </template>
 
 <style lang="scss" scoped>

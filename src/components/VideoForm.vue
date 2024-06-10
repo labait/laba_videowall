@@ -6,6 +6,10 @@ import SelectSource from "./SelectSource.vue";
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
+import Action from '../components/Action.vue';
+
+const state = ref("loaded")
+const actionPrimary = ref('Choose VIDEO and AUDIO source')
 const autoConnect = ref(false);
 const videoFormat = "webm";
 const recording = ref(false);
@@ -90,6 +94,8 @@ const setupRecording = async () => {
   video.setAttribute("webkit-playsinline", "");
   video.setAttribute("muted", "");
   await video.play();
+  state.value = "ready"
+  actionPrimary.value = "Click to Record";
 
   // set video and audio sources in local storage to re-use them
   localStorage.setItem("sourceVideo", sourceVideo.value);
@@ -112,25 +118,7 @@ const startRecording = async () => {
   const chunks = [];
   recorder = new MediaRecorder(stream);   
   recorder.ondataavailable = (e) => chunks.push(e.data);
-  recorder.onstop = async (e) => {
-    const blob = new Blob(chunks, { type: `video/${videoFormat}` });
-    const url = URL.createObjectURL(blob);
-    const response = await axios.post("/api/create", {
-      message: "test video",
-      sender: "test sender",
-      video: await blobToBase64(blob),
-    });
-    console.log("response", response);
-    router.push("/");
-    /*
-    const a = document.createElement("a");
-    document.body.appendChild(a);
-    a.href = url;
-    a.download = `video.${videoFormat}`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    */
-  };
+  recorder.onstop = await saveVideo();
   recorder.start();
   recordingDatetimeStart.value = new Date();
   setRecordingInfo();
@@ -172,9 +160,51 @@ watch(sourceAudio, async () => {
     await setupRecording();
   }
 });
+
+
+const handleActionPrimary = () => {
+  switch (state.value) {
+    case "loaded":
+      break;
+    case "ready":
+      startRecording();
+      state.value = "recording";
+      actionPrimary.value = "Recording";
+      break;
+    default:
+      break;
+  }
+}
+
+const saveVideo = async (chunks) => {
+  state.value = "saving";
+  actionPrimary.value = "Saving";
+  const blob = new Blob(chunks, { type: `video/${videoFormat}` });
+  const url = URL.createObjectURL(blob);
+  const response = await axios.post("/api/create", {
+    message: "test video",
+    sender: "test sender",
+    video: await blobToBase64(blob),
+  });
+  console.log("response", response);
+  router.push("/");
+  /*
+  const a = document.createElement("a");
+  document.body.appendChild(a);
+  a.href = url;
+  a.download = `video.${videoFormat}`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+  */
+};
+
+
+
 </script>
 
 <template>
+  <Action id="actionPrimary" :text="actionPrimary" @click="handleActionPrimary"/>
+
   <div class="flex items-center justify-center h-screen w-full">
     <div class="px-4 py-4 w-full max-w-lg min-w-80">
       <!--<h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>-->
@@ -215,8 +245,7 @@ watch(sourceAudio, async () => {
           </div>
         </div>
 
-        <div id="video" class="bg-white/25 relative rounded-lg overflow-hidden my-4 relative">
-          <span class="absolute top-1/2 -translate-y-1/2 text-black/65 text-2xl text-center w-full">Choose video and audio source</span>
+        <div id="video" class="bg-white/25 relative rounded-lg overflow-hidden my-4">
         </div>
         
         <div class="bg-white rounded-lg p-4">
@@ -250,6 +279,14 @@ watch(sourceAudio, async () => {
 </template>
 
 <style lang="scss" scoped>
+  #actionPrimary {
+    font-size: 6vw;
+    position: absolute;
+    top: 45%;
+    text-align: center;
+    white-space: nowrap;
+  }
+
   #video {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);

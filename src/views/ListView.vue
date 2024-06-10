@@ -1,10 +1,14 @@
 <script setup>
 import { ref, onMounted, computed, toRaw } from 'vue'
+
+import { gsap } from 'gsap'
 import axios from 'axios'
+
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
 import VideoItem from '../components/VideoItem.vue'
-import { gsap } from 'gsap'
+import Action from '../components/Action.vue';
 
 const data = ref({results: []})
 const state = ref("loaded")
@@ -108,22 +112,15 @@ const handleClickSecondary = () => {
 
 <template>
   <div id="list">
-    <a 
-      id="actionPrimary" 
-      href="#"
-      class="block w-7/12 text-center"
-      @click="handleClickPrimary"
-    >{{ actionPrimary }}</a>
+    <Action id="actionPrimary" :text="actionPrimary" @click="handleClickPrimary" />
     <VideoItem class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
-  <a 
+  <Action 
     v-if="currentItem || data.results.length == 0" 
-    id="actionSecondary"
-    href="#"
-    @click="handleClickSecondary"
-  >
-    {{ actionSecondary }}
-  </a>
+    id="actionSecondary" 
+    :text="actionSecondary" 
+    @click="handleClickSecondary" 
+  />
 </template>
 
 <style lang="scss" scoped>
