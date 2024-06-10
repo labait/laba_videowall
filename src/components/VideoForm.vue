@@ -144,9 +144,9 @@ watch(sourceAudio, async () => {
 
 <template>
   <div class="flex justify-center align-middle h-screen ">
-    <div class="w-2/3">
-      <div class="p-4">
-        <h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>
+    <div class="p-4 w-5/6">
+      <h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>
+      <form action="" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="md:flex md:items-center mb-2">
           <div class="md:w-3/12">
             <label class="text-lg " for="autoConnect">Auto connect</label>
@@ -186,18 +186,40 @@ watch(sourceAudio, async () => {
         </div>
 
         <div id="video" class="mb-2"></div>
+
+
+        
+        <div class="mb-4">
+          <label for="sender" class="block leading-6 text-gray-900">sender</label>
+          <div class="mt-2">
+            <input type="sender" name="email" id="email" class="block w-full rounded-md border-0 p-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600" placeholder="you@example.com" aria-describedby="email-description">
+          </div>
+        </div>
+      
+        <label for="message" class="block leading-6 text-gray-900">Add your message</label>
+          <div class="mt-2">
+            <textarea rows="3" name="message" class="block w-full rounded-md border-0 p-4 mb-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
+          </div>
         
         <template v-if="sourceVideo && sourceAudio">
-          <button @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
+          <button type="submit" @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
             {{ recording ? "Stop recording" : "Record video" }}
           </button>
           <div v-if="recording" class="inline">
             <span>{{ recordingInfo }}</span>
           </div>
         </template>
-      </div>
+      </form>
     </div>
+
   </div>
+  <a 
+    href="" 
+    id="instructions"
+    @click="() => router.push('/')"
+  >
+    go back to list...
+  </a>
 </template>
 
 <style lang="scss" scoped>
