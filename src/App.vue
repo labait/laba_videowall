@@ -6,7 +6,7 @@ import QrCode from './components/QrCode.vue'
 
 const maintenance = computed(() => {
   // check is from localhost
-  if (window.location.hostname === 'localhost') return false
+  if (window.location.hostname === 'localhost2') return false
   // check querystirng debug=1
   if (window.location.search.includes('debug=1')) return false
   return true
@@ -36,8 +36,9 @@ const maintenance = computed(() => {
     <main class=" flex flex-col items-center h-screen">
       <RouterView />
     </main>
+    <QrCode id="qrcode"/>
   </template>
-  <QrCode id="qrcode"/>
+  
 </template>
 
 
