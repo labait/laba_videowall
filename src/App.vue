@@ -6,12 +6,12 @@ import { useRouter, RouterLink } from 'vue-router'
 </script>
 
 <template>
-  <video v-show="true" autoplay="" loop="" muted="" playsinline="" id="background-video">
-      <!-- video esportati con codec mp4 e webm -->
-      <source src="/videos/background.mp4" type="video/mp4">
-      <source src="/videos/background.webm" type="video/webm">
-      <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
-      <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
+  <video v-show="true" autoplay="" loop="" muted="" webkit-playsinline playsinline id="background-video">
+    <!-- video esportati con codec mp4 e webm -->
+    <source src="/videos/background.mp4" type="video/mp4">
+    <source src="/videos/background.webm" type="video/webm">
+    <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
+    <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
   </video>
   <nav v-if="false">
     <RouterLink to="/">List</RouterLink>
