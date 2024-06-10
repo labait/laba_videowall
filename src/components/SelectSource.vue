@@ -15,10 +15,10 @@ const source = defineModel();
 
 <template>
   <select 
-    class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-200" 
+    class="bg-gray-200 border-2 border-gray-200 rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-200" 
     v-model="source" 
   >
-    <option value="">Select a source</option>
+    <option value="" disabled selected>Select a source</option>
     <option v-for="source in sources" :key="source.deviceId" :value="source.deviceId">
       {{ source.label }}
     </option> 

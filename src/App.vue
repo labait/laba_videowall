@@ -17,7 +17,7 @@ import { useRouter, RouterLink } from 'vue-router'
     <RouterLink to="/">List</RouterLink>
     <RouterLink to="/record">Record</RouterLink>
   </nav>
-  <main class=" flex flex-col items-center">
+  <main class=" flex flex-col items-center h-screen">
     <RouterView />
   </main>
 </template>
@@ -72,7 +72,7 @@ main {
 #instructions {
   font-size: 4vw;
   position: absolute;
-  bottom: 60px;
+  bottom: 3rem;
 }
 </style>
 
