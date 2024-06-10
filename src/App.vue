@@ -37,7 +37,28 @@ const maintenance = computed(() => {
       <RouterView />
     </main>
   </template>
+  <QrCode id="qrcode"/>
 </template>
+
+
+<style scoped>
+
+#qrcode {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  width: 30vw;
+  z-index: 200;
+}
+
+@media screen and (min-width: 768px) {
+  #qrcode {
+    width: 10vw;
+  }
+  
+}
+
+</style>
 
 <style >
 :root {
