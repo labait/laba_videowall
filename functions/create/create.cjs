@@ -94,7 +94,7 @@ const handler = async (event) => {
     response = response_upload
     let file_url = response_upload.Location;
 
-    /* convert file to mp4 with aws transcoder 
+    /* convert file to mp4 with aws transcoder */
     const transcoderParams = {
       PipelineId: process.env.ELASTIC_ENCODER_PIPELINE_ID,
       Input: {
@@ -108,7 +108,7 @@ const handler = async (event) => {
     const transcoder = new AWS.ElasticTranscoder();
     response_encoder  = await transcoder.createJob(transcoderParams).promise();
     file_url = `${bucket_base_url}${response_encoder.Job.Output.Key}` 
-    */
+    
 
     response = {file_url}
     /* create a new record in notion, consider message as text, sender as text, video_url as url */
