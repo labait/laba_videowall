@@ -38,7 +38,9 @@ const showItem = () => {
   if(currentVideo?.value?.id) {
     gsap.to(currentVideo.value, {...currentVideo.value.attributes.data, duration: animDuration})
     currentVideo.value.style.zIndex = data.zIndex
-    document.getElementById(currentVideo.value.getAttribute('id')).pause()
+    const video =  document.getElementById(currentVideo.value.getAttribute('id'))
+    video.currentTime = 0
+    video.pause()
   }
   const choosableItems = data.value.results.filter(item => item.id != (currentVideo.value ? currentVideo.value.id : null))
   currentItem.value = choosableItems[Math.floor(Math.random() * choosableItems.length)]
