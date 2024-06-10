@@ -19,7 +19,8 @@ const videoUrl = computed(() => {
 
 <style lang="scss" scoped>
   .item {
-    width: 500px;
+    min-width: 500px;
+    width: 350px;
     height: 500px;
     border-radius: 5px;
     background-position: center;

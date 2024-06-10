@@ -202,7 +202,10 @@ watch(sourceAudio, async () => {
           </div>
         
         <template v-if="sourceVideo && sourceAudio">
-          <button type="submit" @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
+          <button  @click="(event) => {
+            event.preventDefault()
+            recording ? stopRecording() : startRecording()
+          }" class="bg-blue-500 text-white px-4 me-2 py-2 rounded w-full">
             {{ recording ? "Stop recording" : "Record video" }}
           </button>
           <div v-if="recording" class="inline">
