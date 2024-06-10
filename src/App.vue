@@ -1,30 +1,55 @@
 <script setup>
+import { ref, onMounted, computed, toRaw } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 
 //const router = useRouter();
 //router.push('/flipbook') // redirect to flipbook view
+
+const maintenance = computed(() => {
+  // check is from localhost
+  if (window.location.hostname === 'localhost') return false
+  // check querystirng debug=1
+  if (window.location.search.includes('debug=1')) return false
+  return true
+})
+
 </script>
 
 <template>
-  <video v-show="true" autoplay="" loop="" muted="" webkit-playsinline playsinline id="background-video">
-    <!-- video esportati con codec mp4 e webm -->
-    <source src="/videos/background.mp4" type="video/mp4">
-    <source src="/videos/background.webm" type="video/webm">
-    <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
-    <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
-  </video>
-  <nav v-if="false">
-    <RouterLink to="/">List</RouterLink>
-    <RouterLink to="/record">Record</RouterLink>
-  </nav>
-  <main class=" flex flex-col items-center h-screen">
-    <RouterView />
-  </main>
+  <template v-if="maintenance">
+    <div id="maintenance">
+      visit us in the next future :-)
+    </div>
+  </template>
+  <template v-else>
+    <video v-show="true" autoplay="" loop="" muted="" webkit-playsinline playsinline id="background-video">
+      <!-- video esportati con codec mp4 e webm -->
+      <source src="/videos/background.mp4" type="video/mp4">
+      <source src="/videos/background.webm" type="video/webm">
+      <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
+      <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
+    </video>
+    <nav v-if="false">
+      <RouterLink to="/">List</RouterLink>
+      <RouterLink to="/record">Record</RouterLink>
+    </nav>
+    <main class=" flex flex-col items-center h-screen">
+      <RouterView />
+    </main>
+  </template>
 </template>
 
 <style >
 :root {
   --menu-height: 50px;
+}
+
+#maintenance {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 2rem;
 }
 
 #background-video {

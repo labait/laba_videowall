@@ -9,7 +9,11 @@ const router = useRouter()
 import Action from '../components/Action.vue';
 
 const state = ref("loaded")
+const sender = ref(null);
+const message = ref(null);
+
 const actionPrimary = ref('Choose VIDEO and AUDIO source')
+
 const autoConnect = ref(false);
 const videoFormat = "webm";
 const recording = ref(false);
@@ -18,7 +22,6 @@ const recordingInfoInterval = ref(null);
 const recordingInfo = ref(null);
 let recorder = null;
 let stream = null;
-
 const sourcesVideo = ref([]);
 const sourcesAudio = ref([]);
 const sourceVideo = defineModel("sourceVideo", {
@@ -75,6 +78,8 @@ const setRecordingInfo = () => {
 
 
 const setupRecording = async () => {
+  // as user form name and message
+  sender.value = prompt("Enter your name or email", "anonymous");
   stream = await navigator.mediaDevices.getUserMedia({
     video: {
       deviceId: sourceVideo.value,
@@ -136,8 +141,15 @@ const setAutoConnect = () => {
   localStorage.setItem("autoConnect", autoConnect.value);
 };
 
+
+const getIp = async () => {
+  const response = await axios.get("https://api.ipify.org?format=json");
+  console.log("ip", response.data.ip);
+};
+
 onMounted(async () => {
   //return
+  await getIp();
   await getSources()
   await isPermissionGranted()
   autoConnect.value = localStorage.getItem("autoConnect") === "true";
@@ -182,8 +194,8 @@ const saveVideo = async (chunks) => {
   const blob = new Blob(chunks, { type: `video/${videoFormat}` });
   const url = URL.createObjectURL(blob);
   const response = await axios.post("/api/create", {
-    message: "test video",
-    sender: "test sender",
+    message: message.value,
+    sender: sender.value,
     video: await blobToBase64(blob),
   });
   console.log("response", response);
@@ -248,18 +260,18 @@ const saveVideo = async (chunks) => {
         <div id="video" class="bg-white/25 relative rounded-lg overflow-hidden my-4">
         </div>
         
-        <div class="bg-white rounded-lg p-4">
+        <div v-if="sender" class="bg-white rounded-lg p-4">
           <div>
             <label for="sender" class="block leading-6 text-gray-900">Sender</label>
             <div class="mt-2">
-              <input type="sender" name="email" id="email" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600" placeholder="you@example.com" aria-describedby="email-description">
+              <input type="text" disabled v-model="sender" name="sender" id="sender" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600" :placeholder="sender" aria-describedby="sender-description">
             </div>
           </div>
 
           <div class="mt-4">
             <label for="message" class="block leading-6 text-gray-900">Add your message</label>
             <div class="mt-2">
-              <textarea rows="2" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
+              <textarea rows="2" v-model="message" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
             </div>
           </div>
           
