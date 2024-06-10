@@ -34,6 +34,34 @@ const getSources = async () => {
   console.log("devices", devices);
 };
 
+const isPermissionGranted = async () => {
+  try {
+    const res = await navigator.permissions.query({ name: "camera" });
+    if (res.state === "granted") {
+      console.log("Permission granted");
+      getSources();
+    } else if (res.state === "denied") {
+      console.log("Permission denied");
+    } else if (res.state === "prompt") {
+      console.log("Permission prompt");
+      requestCameraAccess();
+    }
+  } catch (error) {
+    console.error("Error checking camera permissions:", error);
+  }
+};
+
+const requestCameraAccess = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    console.log("Camera access granted");
+    getSources();
+    stream.getTracks().forEach(track => track.stop());
+  } catch (error) {
+    console.error("Camera access denied:", error);
+  }
+};
+
 
 const setRecordingInfo = () => {
   const duration = new Date() - recordingDatetimeStart.value;
@@ -58,6 +86,9 @@ const setupRecording = async () => {
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("muted", "");
   await video.play();
 
   // set video and audio sources in local storage to re-use them
@@ -120,6 +151,7 @@ const setAutoConnect = () => {
 onMounted(async () => {
   //return
   await getSources()
+  await isPermissionGranted()
   autoConnect.value = localStorage.getItem("autoConnect") === "true";
   const previousSourceVideo = localStorage.getItem("sourceVideo");
   const previousSourceAudio = localStorage.getItem("sourceAudio");
