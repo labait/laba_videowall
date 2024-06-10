@@ -5,3 +5,9 @@ import qrcode from '../assets/qr-code_synapses-apo.laba.edu.svg'
 <template>
   <img :src="qrcode" alt="qr-code" class="mb-4" />
 </template>
+
+<style scoped>
+  img {
+    border-radius: 7px;
+  }
+</style>
