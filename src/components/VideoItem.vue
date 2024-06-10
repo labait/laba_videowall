@@ -13,6 +13,8 @@ const videoUrl = computed(() => {
     class="item" 
     :id="item.id"
     :src="videoUrl"
+    webkit-playsinline 
+    playsinline
   >
   </video>
 </template>
