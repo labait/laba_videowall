@@ -2,12 +2,11 @@
 import { ref, onMounted, computed, toRaw } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 
-//const router = useRouter();
-//router.push('/flipbook') // redirect to flipbook view
+import QrCode from './components/QrCode.vue'
 
 const maintenance = computed(() => {
   // check is from localhost
-  if (window.location.hostname === 'localhost') return false
+  if (window.location.hostname === 'localhost2') return false
   // check querystirng debug=1
   if (window.location.search.includes('debug=1')) return false
   return true
@@ -18,6 +17,7 @@ const maintenance = computed(() => {
 <template>
   <template v-if="maintenance">
     <div id="maintenance">
+      <QrCode />
       visit us in the next future :-)
     </div>
   </template>
@@ -46,6 +46,7 @@ const maintenance = computed(() => {
 
 #maintenance {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
