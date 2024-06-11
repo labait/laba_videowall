@@ -11,6 +11,7 @@ const router = useRouter()
 
 import Action from '../components/Action.vue';
 
+const maxVideosPerHour = 1;
 const state = ref("loaded")
 const sender = ref(null);
 const message = ref(null);
@@ -43,6 +44,25 @@ const getSources = async () => {
   sourcesVideo.value = devices.filter((device) => device.kind === "videoinput");
   sourcesAudio.value = devices.filter((device) => device.kind === "audioinput");
 };
+
+const logCheck = async () => {
+  if (global.isLocalhost.value) {
+    console.log("localhost, skipping log check");
+    return;
+  }
+  const timestampLatest = localStorage.getItem("timestamp-latest") || (new Date()).getTime();
+  // check difference in hours between now and last check
+  const hoursPassed = (new Date() - timestampLatest) / 1000 / 60 / 60;
+  if(hoursPassed > 1) localStorage.setItem("video-count", 0);
+  const videoCount = localStorage.getItem("video-count") || 0;
+  console.log("hoursPassed (from last video) ", hoursPassed, " hour(s) ago, video count", videoCount);
+}
+
+const logVideo = async () => {
+  localStorage.setItem("timestamp-latest", (new Date()).getTime());
+  const videoCount = localStorage.getItem("video-count") || 0;
+  localStorage.setItem("video-count", parseInt(videoCount)+1);
+}
 
 const isPermissionGranted = async () => {
   try {
@@ -157,6 +177,7 @@ const getIp = async () => {
 };
 
 onMounted(async () => {
+  await logCheck();
   await getIp();
   await getSources()
   await isPermissionGranted()
@@ -223,6 +244,7 @@ const saveVideo = async (chunks) => {
       video: await blobToBase64(blob),
     });
     console.log("response", response);
+    logVideo()
   }
 
   router.push("/");

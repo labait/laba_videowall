@@ -20,6 +20,7 @@ const maintenance = computed(() => {
 
 export function useGlobal() {
   return {
+    isLocalhost,
     allowRecord,
     maintenance,
   }
