@@ -1,20 +1,16 @@
 <script setup>
 import { ref, onMounted, computed, toRaw } from 'vue'
+
+import { useGlobal } from './global.js'
+const global = useGlobal()
+
 import { useRouter, RouterLink } from 'vue-router'
-
 import QrCode from './components/QrCode.vue'
-
-const maintenance = computed(() => {
-  let maintenance = (import.meta.env.VITE_MAINTENANCE === 'true')
-  if (window.location.hostname === 'localhost') maintenance = false
-  if (window.location.search.includes('debug=1')) maintenance = false
-  return maintenance
-})
 
 </script>
 
 <template>
-  <template v-if="maintenance">
+  <template v-if="global.maintenance.value">
     <div id="maintenance">
       <QrCode />
       visit us in the next future :-)
