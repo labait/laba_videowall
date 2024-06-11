@@ -133,7 +133,7 @@ const itemIsImage = (item) => {
     <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
   <Action 
-    v-if="global.allowRecord.value &&  (currentItem || data.results.length == 0)" 
+    v-if="global.allowRecord.value" 
     id="actionSecondary" 
     :text="actionSecondary" 
     @click="handleClickSecondary" 
