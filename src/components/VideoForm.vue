@@ -41,7 +41,6 @@ const getSources = async () => {
   const devices = await navigator.mediaDevices.enumerateDevices();
   sourcesVideo.value = devices.filter((device) => device.kind === "videoinput");
   sourcesAudio.value = devices.filter((device) => device.kind === "audioinput");
-  console.log("devices", devices);
 };
 
 const isPermissionGranted = async () => {
