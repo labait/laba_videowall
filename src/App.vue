@@ -78,17 +78,22 @@ main {
 }
 
 #actionPrimary, #actionSecondary {
+  padding: 1rem;
+  /* border-radius: 0.5rem; */
   color: white;
   letter-spacing:-0.05em;
   text-align: center; 
   line-height: 0.9em;
   cursor: pointer;
+  &:hover {
+    /* background-color: rgba(0, 0, 0, 0.6); */
+    text-shadow: 1px 1px 16px rgba(0, 0, 0, 0.7);
+  }
 }
 
 #actionPrimary {
   overflow-wrap: break-word;
   font-size: 8vw;
-  color: white;
   letter-spacing:-0.05em;
   text-align: center;
   z-index: 101;

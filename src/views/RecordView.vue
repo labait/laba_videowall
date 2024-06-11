@@ -17,7 +17,7 @@ onMounted(() => {
 
 <template>
   <VideoForm></VideoForm>
-  <Action id="actionSecondary" text="Go back to list..." @click="() => router.push('/')"/>
+  <Action id="actionSecondary" text="back to list" @click="() => router.push('/')"/>
 </template>
 
 <style lang="scss" scoped>

@@ -15,7 +15,7 @@ const state = ref("loaded")
 const sender = ref(null);
 const message = ref(null);
 
-const actionPrimary = ref('Choose VIDEO and AUDIO source')
+const actionPrimary = ref('choose VIDEO and AUDIO source')
 
 const autoConnect = ref(false);
 const videoFormat = "webm";
@@ -35,6 +35,7 @@ const sourceAudio = defineModel("sourceAudio", {
   type: String,
   default: null,
 });
+const sourcesSelected = computed(() => sourceVideo.value && sourceAudio.value);
 
 const getSources = async () => {
   navigator.mediaDevices.getUserMedia({ audio: true, video: true });
@@ -81,7 +82,7 @@ const setRecordingInfo = () => {
 
 const setupRecording = async () => {
   // as user form name and message
-  sender.value = prompt("Enter your name or email", "anonymous");
+  sender.value = prompt("enter your name or email", "anonymous");
   stream = await navigator.mediaDevices.getUserMedia({
     video: {
       deviceId: sourceVideo.value,
@@ -105,7 +106,7 @@ const setupRecording = async () => {
   video.setAttribute("muted", "");
   await video.play();
   state.value = "ready"
-  actionPrimary.value = "Click to Record";
+  actionPrimary.value = "click to record";
 
   // set video and audio sources in local storage to re-use them
   localStorage.setItem("sourceVideo", sourceVideo.value);
@@ -128,7 +129,10 @@ const startRecording = async () => {
   const chunks = [];
   recorder = new MediaRecorder(stream);   
   recorder.ondataavailable = (e) => chunks.push(e.data);
-  recorder.onstop = await saveVideo();
+  recorder.onstop = async () => {
+    console.log("recording stopped");
+    await saveVideo()
+  };
   recorder.start();
   recordingDatetimeStart.value = new Date();
   setRecordingInfo();
@@ -179,13 +183,19 @@ watch(sourceAudio, async () => {
 
 
 const handleActionPrimary = () => {
+  console.log("actionPrimary", actionPrimary.value, "state", state.value);
   switch (state.value) {
     case "loaded":
       break;
     case "ready":
       startRecording();
       state.value = "recording";
-      actionPrimary.value = "Recording";
+      actionPrimary.value = "click to stop";
+      break;
+    case "recording":
+      stopRecording();
+      state.value = "saving";
+      actionPrimary.value = "saving, please wait...";
       break;
     default:
       break;
@@ -197,20 +207,27 @@ const saveVideo = async (chunks) => {
   actionPrimary.value = "Saving";
   const blob = new Blob(chunks, { type: `video/${videoFormat}` });
   const url = URL.createObjectURL(blob);
-  const response = await axios.post("/api/create", {
-    message: message.value,
-    sender: sender.value,
-    video: await blobToBase64(blob),
-  });
-  console.log("response", response);
+
+  const download = true;
+  if(download){
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.href = url;
+    a.download = `video.${videoFormat}`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } else {
+    const response = await axios.post("/api/create", {
+      message: (message.value || ""),
+      sender: sender.value,
+      video: await blobToBase64(blob),
+    });
+    console.log("response", response);
+  }
+
   router.push("/");
   /*
-  const a = document.createElement("a");
-  document.body.appendChild(a);
-  a.href = url;
-  a.download = `video.${videoFormat}`;
-  a.click();
-  window.URL.revokeObjectURL(url);
+  
   */
 };
 
@@ -237,7 +254,7 @@ const saveVideo = async (chunks) => {
               />
             </div>
           </div>
-          <div id="sources" class="mt-4">
+          <div v-if="!sourcesSelected" id="sources" class="mt-4">
             <div class="flex items-center">
               <div class="w-4/12 pr-3">
                 <label class="" for="source">Video</label>
@@ -272,9 +289,8 @@ const saveVideo = async (chunks) => {
           </div>
 
           <div class="mt-4">
-            <label for="message" class="block leading-6 text-gray-900">Add your message</label>
             <div class="mt-2">
-              <textarea rows="2" v-model="message" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
+              <textarea rows="2" v-model="message" placeholder="optional message" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
             </div>
           </div>
         </div>

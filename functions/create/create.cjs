@@ -150,7 +150,7 @@ const handler = async (event) => {
             }
           ]
         },
-        video : {
+        media : {
           type: "files",
           files: [
             {
