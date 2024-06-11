@@ -308,7 +308,5 @@ const saveVideo = async (chunks) => {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
     position: relative;
-    border-radius: 8px;
-    overflow: hidden;
   }
 </style>
