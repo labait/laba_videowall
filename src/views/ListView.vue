@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted, computed, toRaw } from 'vue'
+import { useGlobal } from '../global.js'
+const global = useGlobal()
 
 import { gsap } from 'gsap'
 import axios from 'axios'
@@ -119,7 +121,7 @@ const handleClickSecondary = () => {
     <VideoItem class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
   <Action 
-    v-if="currentItem || data.results.length == 0" 
+    v-if="global.allowRecord.value &&  (currentItem || data.results.length == 0)" 
     id="actionSecondary" 
     :text="actionSecondary" 
     @click="handleClickSecondary" 

@@ -3,6 +3,9 @@ import { ref, onMounted, computed, defineModel, watch } from "vue";
 import axios from 'axios'
 import SelectSource from "./SelectSource.vue";
 
+import { useGlobal } from '../global.js'
+const global = useGlobal()
+
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
@@ -150,7 +153,6 @@ const getIp = async () => {
 };
 
 onMounted(async () => {
-  //return
   await getIp();
   await getSources()
   await isPermissionGranted()

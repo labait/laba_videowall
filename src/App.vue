@@ -5,11 +5,10 @@ import { useRouter, RouterLink } from 'vue-router'
 import QrCode from './components/QrCode.vue'
 
 const maintenance = computed(() => {
-  // check is from localhost
-  if (window.location.hostname === 'localhost') return false
-  // check querystirng debug=1
-  if (window.location.search.includes('debug=1')) return false
-  return true
+  let maintenance = (import.meta.env.VITE_MAINTENANCE === 'true')
+  if (window.location.hostname === 'localhost') maintenance = false
+  if (window.location.search.includes('debug=1')) maintenance = false
+  return maintenance
 })
 
 </script>
@@ -29,10 +28,6 @@ const maintenance = computed(() => {
       <!-- fallback image in formato gif nel caso non sia supportato il markup video -->
       <img src="/videos/background-fallback.gif" title="Your browser does not support the video tag">
     </video>
-    <nav v-if="false">
-      <RouterLink to="/">List</RouterLink>
-      <RouterLink to="/record">Record</RouterLink>
-    </nav>
     <main class=" flex flex-col items-center h-screen">
       <RouterView />
     </main>
