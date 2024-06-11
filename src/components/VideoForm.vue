@@ -166,7 +166,7 @@ onMounted(async () => {
   ) {
     sourceVideo.value = previousSourceVideo;
     sourceAudio.value = previousSourceAudio;
-    setupRecording();
+    //setupRecording();
   }
 });
 
