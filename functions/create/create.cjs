@@ -51,7 +51,7 @@ function parseMultipartForm(event) {
 
 const handler = async (event) => {
   try {
-    const default_state = 'published';
+    const default_state = 'created';
     // check if method is POST and that the body contains a message
     if (event.httpMethod !== 'POST' || !event.body) {
       return { statusCode: 400, body: 'Bad Request' }
