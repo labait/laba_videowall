@@ -61,7 +61,7 @@ const showItem = () => {
       opacity: 1,
       duration: animDuration,
       onComplete: () => {
-        actionPrimary.value = currentItem.value.properties?.message?.rich_text[0]?.plain_text;
+        actionPrimary.value = (currentItem.value.properties?.message?.rich_text[0]?.plain_text || "") // empty message
         const video = document.getElementById(currentVideo.value.getAttribute('id'))
         video.play()
         video.onended = () => {
@@ -128,7 +128,7 @@ const itemIsImage = (item) => {
 </script>
 
 <template>
-  <div id="list">
+  <div id="list" :class="state">
     <Action id="actionPrimary" :text="actionPrimary" @click="handleClickPrimary" />
     <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
@@ -143,6 +143,17 @@ const itemIsImage = (item) => {
 
 <style lang="scss" scoped>
 
+// align center vertically
+#actionPrimary {
+  min-width: 100%;
+  min-height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  // border: 1px solid red;
+}
+
 #qrcode {
   position: absolute;
   right: 30px;
@@ -150,6 +161,7 @@ const itemIsImage = (item) => {
   width: 30vw;
   z-index: 200;
 }
+
 
 @media screen and (min-width: 768px) {
   #qrcode {
