@@ -131,7 +131,7 @@ const startRecording = async () => {
   recorder.ondataavailable = (e) => chunks.push(e.data);
   recorder.onstop = async () => {
     console.log("recording stopped");
-    await saveVideo()
+    await saveVideo(chunks)
   };
   recorder.start();
   recordingDatetimeStart.value = new Date();
@@ -208,7 +208,7 @@ const saveVideo = async (chunks) => {
   const blob = new Blob(chunks, { type: `video/${videoFormat}` });
   const url = URL.createObjectURL(blob);
 
-  const download = true;
+  const download = false;
   if(download){
     const a = document.createElement("a");
     document.body.appendChild(a);
