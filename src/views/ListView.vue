@@ -9,7 +9,8 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-import VideoItem from '../components/VideoItem.vue'
+import ItemVideo from '../components/ItemVideo.vue'
+import ItemImage from '../components/ItemImage.vue'
 import Action from '../components/Action.vue';
 import QrCode from '../components/QrCode.vue'
 
@@ -113,12 +114,23 @@ const handleClickSecondary = () => {
   router.push("/record")
 }
 
+const itemIsVideo = (item) => {
+  const url = item.properties.media.files[0].external.url
+  return url.endsWith('webm') || url.endsWith('mp4')
+}
+
+const itemIsImage = (item) => {
+  return !itemIsVideo(item)
+}
+
+
+
 </script>
 
 <template>
   <div id="list">
     <Action id="actionPrimary" :text="actionPrimary" @click="handleClickPrimary" />
-    <VideoItem class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
+    <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
   <Action 
     v-if="global.allowRecord.value &&  (currentItem || data.results.length == 0)" 
