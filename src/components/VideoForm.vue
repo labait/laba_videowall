@@ -96,6 +96,7 @@ const setupRecording = async () => {
   video.style.transform = "scaleX(-1)";
   video.style.height = "100%";
   video.style.objectFit = "cover";
+  video.style.borderRadius = "8px";
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
