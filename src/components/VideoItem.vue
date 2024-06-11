@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 const props = defineProps(['item'])
 
 const videoUrl = computed(() => {
-  return props.item.properties.video.files[0].external.url
+  return props.item.properties.media.files[0].external.url
 })
 
 </script>
