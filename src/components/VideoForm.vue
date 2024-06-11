@@ -96,6 +96,7 @@ const setupRecording = async () => {
   video.style.transform = "scaleX(-1)";
   video.style.height = "100%";
   video.style.objectFit = "cover";
+  video.style.borderRadius = "8px";
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
@@ -308,7 +309,5 @@ const saveVideo = async (chunks) => {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
     position: relative;
-    border-radius: 8px;
-    overflow: hidden;
   }
 </style>
