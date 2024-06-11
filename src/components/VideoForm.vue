@@ -92,7 +92,7 @@ const setupRecording = async () => {
   });
   const videoDiv = document.getElementById("video");
   const video = document.createElement("video");
-  videoDiv.innerHTML = "";
+  //videoDiv.innerHTML = ""; this remove actionPrimary button
   video.style.transform = "scaleX(-1)";
   video.style.height = "100%";
   video.style.objectFit = "cover";
@@ -300,9 +300,15 @@ const saveVideo = async (chunks) => {
     }
   }
 
+  .bg-white {
+    box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.3);
+  }
+
   #video {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
     position: relative;
+    border-radius: 8px;
+    overflow: hidden;
   }
 </style>
