@@ -91,7 +91,9 @@ const setupRecording = async () => {
   const videoDiv = document.getElementById("video");
   const video = document.createElement("video");
   videoDiv.innerHTML = "";
-  videoDiv.style.transform = 'scale(-1, 1)';
+  video.style.transform = "scaleX(-1)";
+  video.style.height = "100%";
+  video.style.objectFit = "cover";
   videoDiv.appendChild(video);
   video.srcObject = stream;
   video.volume = 0;
@@ -215,8 +217,6 @@ const saveVideo = async (chunks) => {
 </script>
 
 <template>
-  <Action id="actionPrimary" :text="actionPrimary" @click="handleActionPrimary"/>
-
   <div class="flex items-center justify-center h-screen w-full">
     <div class="px-4 py-4 w-full max-w-lg min-w-80">
       <!--<h1 class="text-2xl font-bold mb-2 text-center">Record a video</h1>-->
@@ -257,7 +257,8 @@ const saveVideo = async (chunks) => {
           </div>
         </div>
 
-        <div id="video" class="bg-white/25 relative rounded-lg overflow-hidden my-4">
+        <div id="video" class="bg-white/25 relative rounded-lg my-4">
+          <Action id="actionPrimary" :text="actionPrimary" @click="handleActionPrimary"/>
         </div>
         
         <div v-if="sender" class="bg-white rounded-lg p-4">
@@ -274,15 +275,6 @@ const saveVideo = async (chunks) => {
               <textarea rows="2" v-model="message" name="message" class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"></textarea>
             </div>
           </div>
-          
-          <!-- <template v-if="sourceVideo && sourceAudio">
-            <button type="submit" @click="() => {recording ? stopRecording() : startRecording()}" class="bg-blue-500 text-white px-4 py-2 rounded w-full">
-              {{ recording ? "Stop recording" : "Record video" }}
-            </button>
-            <div v-if="recording" class="inline">
-              <span>{{ recordingInfo }}</span>
-            </div>
-          </template> -->
         </div>
       </form>
     </div>
@@ -292,9 +284,11 @@ const saveVideo = async (chunks) => {
 
 <style lang="scss" scoped>
   #actionPrimary {
-    font-size: 6vw;
+    font-size: 10vw;
     position: absolute;
-    top: 45%;
+    top: 50%;
+    transform: translate(-50%);
+    border: 1px solid red;
     text-align: center;
     white-space: nowrap;
   }
@@ -302,5 +296,6 @@ const saveVideo = async (chunks) => {
   #video {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
+    position: relative;
   }
 </style>

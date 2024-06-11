@@ -36,7 +36,6 @@ const maintenance = computed(() => {
     <main class=" flex flex-col items-center h-screen">
       <RouterView />
     </main>
-    <QrCode id="qrcode"/>
   </template>
   
 </template>
@@ -44,20 +43,7 @@ const maintenance = computed(() => {
 
 <style scoped>
 
-#qrcode {
-  position: absolute;
-  right: 30px;
-  bottom: 30px;
-  width: 30vw;
-  z-index: 200;
-}
 
-@media screen and (min-width: 768px) {
-  #qrcode {
-    width: 10vw;
-  }
-  
-}
 
 </style>
 

@@ -9,6 +9,7 @@ const router = useRouter()
 
 import VideoItem from '../components/VideoItem.vue'
 import Action from '../components/Action.vue';
+import QrCode from '../components/QrCode.vue'
 
 const data = ref({results: []})
 const state = ref("loaded")
@@ -57,7 +58,7 @@ const showItem = () => {
       opacity: 1,
       duration: animDuration,
       onComplete: () => {
-        actionPrimary.value = currentItem.value.properties.message.rich_text[0].plain_text;
+        actionPrimary.value = currentItem.value.properties?.message?.rich_text[0]?.plain_text;
         const video = document.getElementById(currentVideo.value.getAttribute('id'))
         video.play()
         video.onended = () => {
@@ -123,9 +124,24 @@ const handleClickSecondary = () => {
     :text="actionSecondary" 
     @click="handleClickSecondary" 
   />
+  <QrCode id="qrcode"/>
 </template>
 
 <style lang="scss" scoped>
+
+#qrcode {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  width: 30vw;
+  z-index: 200;
+}
+
+@media screen and (min-width: 768px) {
+  #qrcode {
+    width: 10vw;
+  }
+}
 
   #list {
     height: 100%;
