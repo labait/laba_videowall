@@ -286,13 +286,19 @@ const saveVideo = async (chunks) => {
 
 <style lang="scss" scoped>
   #actionPrimary {
-    font-size: 10vw;
+    font-size: 5vw;
     position: absolute;
     top: 50%;
-    transform: translate(-50%);
-    border: 1px solid red;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     white-space: nowrap;
+
+    @media screen and (max-width: 768px){
+      font-size: 2.2rem;
+      white-space: normal;
+      width: 100%;
+    }
   }
 
   #video {
