@@ -11,7 +11,10 @@ const router = useRouter()
 
 import Action from '../components/Action.vue';
 
+const videoDowload = true;
 const maxVideosPerHour = 1;
+const maxVideoSeconds = 10;
+
 const state = ref("loaded")
 const sender = ref(null);
 const message = ref(null);
@@ -23,7 +26,6 @@ const videoFormat = "webm";
 const recording = ref(false);
 const recordingDatetimeStart = ref(null);
 const recordingInfoInterval = ref(null);
-const recordingInfo = ref(null);
 let recorder = null;
 let stream = null;
 const sourcesVideo = ref([]);
@@ -96,7 +98,11 @@ const requestCameraAccess = async () => {
 const setRecordingInfo = () => {
   const duration = new Date() - recordingDatetimeStart.value;
   const date = new Date(duration);
-  recordingInfo.value = date.toISOString().substr(11, 8);
+  if (duration > maxVideoSeconds * 1000) {
+    stopRecording();
+    return;
+  }
+  actionPrimary.value = date.toISOString().substr(11, 8);
 };
 
 
@@ -126,7 +132,7 @@ const setupRecording = async () => {
   video.setAttribute("muted", "");
   await video.play();
   state.value = "ready"
-  actionPrimary.value = "click to record";
+  actionPrimary.value = `click to record ${maxVideoSeconds}s`; ;
 
   // set video and audio sources in local storage to re-use them
   localStorage.setItem("sourceVideo", sourceVideo.value);
@@ -228,9 +234,7 @@ const saveVideo = async (chunks) => {
   actionPrimary.value = "Saving";
   const blob = new Blob(chunks, { type: `video/${videoFormat}` });
   const url = URL.createObjectURL(blob);
-
-  const download = false;
-  if(download){
+  if(videoDowload){
     const a = document.createElement("a");
     document.body.appendChild(a);
     a.href = url;
