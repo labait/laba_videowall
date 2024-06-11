@@ -41,7 +41,6 @@ const getSources = async () => {
   const devices = await navigator.mediaDevices.enumerateDevices();
   sourcesVideo.value = devices.filter((device) => device.kind === "videoinput");
   sourcesAudio.value = devices.filter((device) => device.kind === "audioinput");
-  console.log("devices", devices);
 };
 
 const isPermissionGranted = async () => {
@@ -93,7 +92,7 @@ const setupRecording = async () => {
   });
   const videoDiv = document.getElementById("video");
   const video = document.createElement("video");
-  videoDiv.innerHTML = "";
+  //videoDiv.innerHTML = ""; this remove actionPrimary button
   video.style.transform = "scaleX(-1)";
   video.style.height = "100%";
   video.style.objectFit = "cover";
@@ -167,7 +166,7 @@ onMounted(async () => {
   ) {
     sourceVideo.value = previousSourceVideo;
     sourceAudio.value = previousSourceAudio;
-    setupRecording();
+    //setupRecording();
   }
 });
 
@@ -286,18 +285,30 @@ const saveVideo = async (chunks) => {
 
 <style lang="scss" scoped>
   #actionPrimary {
-    font-size: 10vw;
+    font-size: 5vw;
     position: absolute;
     top: 50%;
-    transform: translate(-50%);
-    border: 1px solid red;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
     white-space: nowrap;
+
+    @media screen and (max-width: 768px){
+      font-size: 2.2rem;
+      white-space: normal;
+      width: 100%;
+    }
+  }
+
+  .bg-white {
+    box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.3);
   }
 
   #video {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
     position: relative;
+    border-radius: 8px;
+    overflow: hidden;
   }
 </style>
