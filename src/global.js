@@ -1,7 +1,12 @@
 import { ref, computed} from "vue";
 
 
+const isLocalhost = computed(() => {
+  return window.location.hostname === 'localhost'
+})
+
 const allowRecord = computed(() => {
+  if(isLocalhost.value) return true;
   return (import.meta.env.VITE_ALLOW_RECORD === 'true')
 })
 
