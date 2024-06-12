@@ -343,6 +343,12 @@ const saveVideo = async (chunks) => {
     }
   }
 
+  #actionSecondary {
+    @media screen and (max-width: 768px) {
+      bottom: -10vh;
+    }
+  }
+
   .bg-white {
     box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.3);
   }
@@ -351,5 +357,7 @@ const saveVideo = async (chunks) => {
     aspect-ratio: 4/3;
     backdrop-filter: blur(1rem);
     position: relative;
+    display: flex;
+    justify-content: center;
   }
 </style>

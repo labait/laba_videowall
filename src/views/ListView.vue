@@ -166,6 +166,12 @@ const itemIsImage = (item) => {
   z-index: 200;
 }
 
+#actionSecondary {
+  @media screen and (max-width: 768px) {
+    left: 5%;
+  }
+}
+
 
 @media screen and (min-width: 768px) {
   #qrcode {
