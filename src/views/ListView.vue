@@ -90,6 +90,10 @@ onMounted(async () => {
     gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
       actionPrimary.value = "click to start"
     }})
+    item.load();
+    item.addEventListener('loadeddata', function () {
+      item.pause();
+    });
   })
 })
 
@@ -160,6 +164,12 @@ const itemIsImage = (item) => {
   bottom: 30px;
   width: 30vw;
   z-index: 200;
+}
+
+#actionSecondary {
+  @media screen and (max-width: 768px) {
+    left: 5%;
+  }
 }
 
 

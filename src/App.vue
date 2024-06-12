@@ -103,6 +103,11 @@ main {
   font-size: 4vw;
   position: absolute;
   bottom: 3rem;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.4rem;
+    z-index: 100;
+  }
 }
 </style>
 

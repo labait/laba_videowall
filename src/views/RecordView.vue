@@ -21,4 +21,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+  #actionSecondary {
+    @media screen and (max-width: 768px) {
+      position: initial;
+    }
+  }
 </style>
