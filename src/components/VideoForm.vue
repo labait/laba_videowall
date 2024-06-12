@@ -343,12 +343,6 @@ const saveVideo = async (chunks) => {
     }
   }
 
-  #actionSecondary {
-    @media screen and (max-width: 768px) {
-      position: initial;
-    }
-  }
-
   .h-screen {
     @media screen and (max-width: 768px) {
       height: 82vh;
