@@ -21,12 +21,19 @@ const handler = async (event) => {
     const notion = new Client({ auth: NOTION_KEY });
     response = await notion.databases.query({
       database_id: NOTION_DB,
+      page_size: 50,
       filter: {
         property: 'state',
         select: {
           equals: 'published',
         },
-      }
+      },
+      sorts: [
+        {
+          property: "date",
+          direction: "descending"
+        }
+      ]
     });
     
 

@@ -13,7 +13,7 @@ import Action from '../components/Action.vue';
 
 const videoDownload = false;
 const maxVideosPerHour = 1;
-const maxVideoSeconds = 10;
+const maxVideoSeconds = 5;
 
 const state = ref("loaded")
 const sender = ref(null);

@@ -21,6 +21,7 @@ const actionSecondary = ref('click to record')
 const currentItem = ref(null)
 const currentVideo = ref(null)
 const animDuration = 0.5
+const refreshSeconds = ref(600) // refresh every 10 minutes
 
 const loadData = async () => {
   actionPrimary.value = "loading"
@@ -76,6 +77,11 @@ const showItem = () => {
 }
 
 onMounted(async () => {
+  // refresh after 5 minutes
+  setInterval(() => {
+    window.location.reload()
+  }, 1000 * refreshSeconds.value)
+
   await loadData()
   const wrapper = document.getElementById('list')
   const items = document.querySelectorAll('.item');
