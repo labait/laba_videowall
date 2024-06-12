@@ -16,7 +16,7 @@ import QrCode from '../components/QrCode.vue'
 
 const data = ref({results: []})
 const state = ref("loaded")
-const actionPrimary = ref('')
+const actionPrimary = ref('click to start')
 const actionSecondary = ref('click to record')
 const currentItem = ref(null)
 const currentVideo = ref(null)
@@ -76,7 +76,6 @@ const showItem = () => {
 }
 
 onMounted(async () => {
-  await loadData()
   const wrapper = document.getElementById('list')
   const items = document.querySelectorAll('.item');
   items.forEach((item, index) => {
@@ -93,9 +92,10 @@ onMounted(async () => {
   })
 })
 
-const handleClickPrimary = () => {
+const handleClickPrimary = async () => {
   switch (state.value) {
     case "loaded":
+      await loadData()
       state.value = "started"
       showItem()
       break;
