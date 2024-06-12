@@ -11,7 +11,7 @@ const router = useRouter()
 
 import Action from '../components/Action.vue';
 
-const videoDowload = true;
+const videoDownload = false;
 const maxVideosPerHour = 1;
 const maxVideoSeconds = 10;
 
@@ -234,7 +234,7 @@ const saveVideo = async (chunks) => {
   actionPrimary.value = "Saving";
   const blob = new Blob(chunks, { type: `video/${videoFormat}` });
   const url = URL.createObjectURL(blob);
-  if(videoDowload){
+  if(videoDownload){
     const a = document.createElement("a");
     document.body.appendChild(a);
     a.href = url;
