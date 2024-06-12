@@ -158,13 +158,6 @@ const itemIsImage = (item) => {
   // border: 1px solid red;
 }
 
-#actionSecondary {
-  @media screen and (max-width: 768px) {
-    font-size: 1.6rem;
-    z-index: 100;
-  }
-}
-
 #qrcode {
   position: absolute;
   right: 30px;
