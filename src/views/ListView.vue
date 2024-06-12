@@ -14,9 +14,9 @@ import ItemImage from '../components/ItemImage.vue'
 import Action from '../components/Action.vue';
 import QrCode from '../components/QrCode.vue'
 
-const data = ref({results: []})
+const data = ref({ results: [] })
 const state = ref("loaded")
-const actionPrimary = ref('click to show video')
+const actionPrimary = ref('')
 const actionSecondary = ref('click to record')
 const currentItem = ref(null)
 const currentVideo = ref(null)
@@ -33,16 +33,16 @@ const loadData = async () => {
 
 
 const showItem = () => {
-  if(data.value.results.length == 0) {
+  if (data.value.results.length == 0) {
     state.value = "empty"
     return
   }
   actionPrimary.value = ""
   console.log(currentVideo?.value?.id)
-  if(currentVideo?.value?.id) {
-    gsap.to(currentVideo.value, {...currentVideo.value.attributes.data, duration: animDuration})
+  if (currentVideo?.value?.id) {
+    gsap.to(currentVideo.value, { ...currentVideo.value.attributes.data, duration: animDuration })
     currentVideo.value.style.zIndex = data.zIndex
-    const video =  document.getElementById(currentVideo.value.getAttribute('id'))
+    const video = document.getElementById(currentVideo.value.getAttribute('id'))
     video.currentTime = 0
     video.pause()
   }
@@ -54,55 +54,61 @@ const showItem = () => {
   currentVideo.value.style.zIndex = 100
   gsap.to(
     currentVideo.value, {
-      x: 0, 
-      y: 0, 
-      scale: 1.3, 
-      rotate: 0, 
-      opacity: 1,
-      duration: animDuration,
-      onComplete: () => {
-        actionPrimary.value = currentItem.value.properties?.message?.rich_text[0]?.plain_text;
-        const video = document.getElementById(currentVideo.value.getAttribute('id'))
-        video.play()
-        video.onended = () => {
-          showItem()
-        }
+    x: 0,
+    y: 0,
+    scale: 1.3,
+    rotate: 0,
+    opacity: 1,
+    duration: animDuration,
+    onComplete: () => {
+      actionPrimary.value = currentItem.value.properties?.message?.rich_text[0]?.plain_text;
+      const video = document.getElementById(currentVideo.value.getAttribute('id'))
+      video.play()
+      video.onended = () => {
+        showItem()
       }
     }
-  )  
+  }
+  )
   // setTimeout(() => {
   //   showItem()
   // }, animDuration * 1000 * 3); // todo
 }
 
 onMounted(async () => {
+  await loadData()
   const wrapper = document.getElementById('list')
   const items = document.querySelectorAll('.item');
   items.forEach((item, index) => {
     const safeArea = .7
-    const x = -wrapper.clientWidth*safeArea/2 + Math.random() * wrapper.clientWidth*safeArea
-    const y = -wrapper.clientHeight*safeArea/2 + Math.random() * wrapper.clientHeight*safeArea
+    const x = -wrapper.clientWidth * safeArea / 2 + Math.random() * wrapper.clientWidth * safeArea
+    const y = -wrapper.clientHeight * safeArea / 2 + Math.random() * wrapper.clientHeight * safeArea
     const scale = 0.3 + Math.random() * 0.3
     const rotate = Math.random() * 90 - 45
     const zIndex = index
     item.attributes.data = { x, y, scale, rotate, zIndex } // save initial position
-    gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
-      actionPrimary.value = "click to start"
-    }})
+    gsap.to(item, {
+      x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
+        actionPrimary.value = "click to start"
+      }
+    })
+    item.load();
+    item.addEventListener('loadeddata', function () {
+      item.pause();
+    });
   })
 })
 
-const handleClickPrimary = async () => {
+const handleClickPrimary = () => {
   switch (state.value) {
     case "loaded":
-      await loadData()
       state.value = "started"
       showItem()
       break;
-    case "started": 
+    case "started":
       showItem()
       break;
-    case "empty": 
+    case "empty":
       router.push("/record")
     default:
       break;
@@ -130,19 +136,14 @@ const itemIsImage = (item) => {
 <template>
   <div id="list">
     <Action id="actionPrimary" :text="actionPrimary" @click="handleClickPrimary" />
-    <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
+    <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results"
+      :key="item.id" :item="item" />
   </div>
-  <Action 
-    v-if="global.allowRecord.value" 
-    id="actionSecondary" 
-    :text="actionSecondary" 
-    @click="handleClickSecondary" 
-  />
-  <QrCode id="qrcode"/>
+  <Action v-if="global.allowRecord.value" id="actionSecondary" :text="actionSecondary" @click="handleClickSecondary" />
+  <QrCode id="qrcode" />
 </template>
 
 <style lang="scss" scoped>
-
 #qrcode {
   position: absolute;
   right: 30px;
@@ -157,19 +158,20 @@ const itemIsImage = (item) => {
   }
 }
 
-  #list {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    .item {
-      transform-origin: center;
-      position: absolute;
-      width: 500px;
-      box-shadow: 20px 30px 10px rgba(0, 0, 0, .3);
-    }
+#list {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .item {
+    transform-origin: center;
+    position: absolute;
+    width: 500px;
+    box-shadow: 20px 30px 10px rgba(0, 0, 0, .3);
   }
+}
 </style>
