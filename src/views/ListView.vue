@@ -90,6 +90,10 @@ onMounted(async () => {
     gsap.to(item, { x, y, scale, rotate, stagger: 0.2, duration: .4, opacity: .8, onComplete: () => {
       actionPrimary.value = "click to start"
     }})
+    item.load();
+    item.addEventListener('loadeddata', function () {
+      item.pause();
+    });
   })
 })
 
