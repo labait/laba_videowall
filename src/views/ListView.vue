@@ -16,7 +16,7 @@ import QrCode from '../components/QrCode.vue'
 
 const data = ref({results: []})
 const state = ref("loaded")
-const actionPrimary = ref('click to start')
+const actionPrimary = ref('click to show video')
 const actionSecondary = ref('click to record')
 const currentItem = ref(null)
 const currentVideo = ref(null)
