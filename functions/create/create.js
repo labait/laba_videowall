@@ -1,7 +1,10 @@
 import { Client } from "@notionhq/client";
 const fs = require('fs');
 import Busboy from "busboy"
-const AWS = require('aws-sdk');
+//const AWS = require('aws-sdk');
+
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { ElasticTranscoderClient, CreateJobCommand } from "@aws-sdk/client-elastic-transcoder"
 
 function parseMultipartForm(event) {
   return new Promise((resolve) => {
@@ -76,12 +79,16 @@ const handler = async (event) => {
     const format_input = 'webm';
     const format_output = 'mp4';
     // set s3 credentials from env
-    AWS.config.update({
-      accessKeyId: process.env.S3_ACCESS_KEY_ID,
-      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      region: process.env.S3_REGION
-    });
-    // upload video to s3
+    const config =  {
+        region:process.env.S3_REGION,
+        credentials:{
+            accessKeyId: process.env.S3_ACCESS_KEY_ID,
+            secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+        }
+    }
+  
+    /*AWS.config.update(config);
+     upload video to s3
     const s3 = new AWS.S3()
     const params = {
       Bucket: process.env.S3_BUCKET_NAME,
@@ -91,7 +98,16 @@ const handler = async (event) => {
       ContentType: `video/${format_input}`
     };
     response_upload = await s3.upload(params).promise();
-    response = response_upload
+    response = response_upload*/
+    const client = new S3Client(config);
+      const command = new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: `${basename}.${format_input}`,
+      Body: video,
+      ACL: 'public-read',
+      ContentType: `video/${format_input}`
+    });
+    const response_upload = await client.send(command);
     let file_url = response_upload.Location;
 
     /* convert file to mp4 with aws transcoder */
@@ -105,9 +121,14 @@ const handler = async (event) => {
         PresetId: process.env.ELASTIC_ENCODER_PRESET_ID, 
       }
     };
+    /*
     const transcoder = new AWS.ElasticTranscoder();
     response_encoder  = await transcoder.createJob(transcoderParams).promise();
-    file_url = `${bucket_base_url}${response_encoder.Job.Output.Key}` 
+    */
+    const clientTranscoder = new ElasticTranscoderClient(config);
+    const commandTranscoder = new CreateJobCommand(transcoderParams);
+    const responseTranscoder = await clientTranscoder.send(commandTranscoder);
+    file_url = `${bucket_base_url}${responseTranscoder.Job.Output.Key}` 
     
 
     response = {file_url}
