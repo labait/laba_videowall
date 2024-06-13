@@ -13,10 +13,10 @@ import Action from '../components/Action.vue';
 
 const videoDownload = false;
 const maxVideosPerHour = 1;
-const maxVideoSeconds = 5;
+const maxVideoSeconds = 6;
 
 const state = ref("loaded")
-const sender = ref(null);
+const sender = ref("anynomous");
 const message = ref(null);
 
 const actionPrimary = ref('choose VIDEO and AUDIO source')
@@ -28,6 +28,7 @@ const recordingDatetimeStart = ref(null);
 const recordingInfoInterval = ref(null);
 let recorder = null;
 let stream = null;
+let streamVideoOnly = null;
 const sourcesVideo = ref([]);
 const sourcesAudio = ref([]);
 const sourceVideo = defineModel("sourceVideo", {
@@ -97,26 +98,29 @@ const requestCameraAccess = async () => {
 
 const setRecordingInfo = () => {
   const duration = new Date() - recordingDatetimeStart.value;
-  const date = new Date(duration);
   if (duration > maxVideoSeconds * 1000) {
     stopRecording();
     return;
   }
+  const date = new Date(duration);
   actionPrimary.value = date.toISOString().substr(11, 8);
 };
 
 
 const setupRecording = async () => {
-  // as user form name and message
-  sender.value = prompt("enter your name or email", "anonymous");
-  stream = await navigator.mediaDevices.getUserMedia({
+  const userMediaConstraints = {
     video: {
       deviceId: sourceVideo.value,
+      width: { exact: 240 },
+      height: { exact: 180 },
+      frameRate: 20
     },
     audio: {
       deviceId: sourceAudio.value,
     },
-  });
+  }
+  streamVideoOnly = await navigator.mediaDevices.getUserMedia({...userMediaConstraints, audio: false});
+  stream = await navigator.mediaDevices.getUserMedia(userMediaConstraints);
   const videoDiv = document.getElementById("video");
   const video = document.createElement("video");
   //videoDiv.innerHTML = ""; this remove actionPrimary button
@@ -125,12 +129,12 @@ const setupRecording = async () => {
   video.style.objectFit = "cover";
   video.style.borderRadius = "8px";
   videoDiv.appendChild(video);
-  video.srcObject = stream;
-  video.volume = 0;
+  video.srcObject = streamVideoOnly;
   video.setAttribute("playsinline", "");
   video.setAttribute("webkit-playsinline", "");
   video.setAttribute("muted", "");
   await video.play();
+  video.volume = 0;
   state.value = "ready"
   actionPrimary.value = `click to record ${maxVideoSeconds}s`; ;
 
@@ -302,7 +306,7 @@ const saveVideo = async (chunks) => {
           </div>
         </div>
 
-        <div id="video" class="bg-white/25 relative rounded-lg my-4">
+        <div id="video" class="relative rounded-lg my-4">
           <Action id="actionPrimary" :text="actionPrimary" @click="handleActionPrimary"/>
         </div>
         

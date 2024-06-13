@@ -138,8 +138,9 @@ const itemIsImage = (item) => {
 </script>
 
 <template>
+ 
   <div id="list" :class="state">
-    <Action id="actionPrimary" :text="actionPrimary" @click="handleClickPrimary" />
+    <Action id="actionPrimary" iconClass="bi bi-record-circle" :text="actionPrimary" @click="handleClickPrimary" />
     <component :is="itemIsVideo ? ItemVideo : ItemImage" class="item" :id="item.id" v-for="item in data.results" :key="item.id" :item="item" />
   </div>
   <Action 
@@ -147,11 +148,17 @@ const itemIsImage = (item) => {
     id="actionSecondary" 
     :text="actionSecondary" 
     @click="handleClickSecondary" 
-  />
+  >
+    <BIconRecordCircle class="icon pr-1"/>
+  </Action>
   <QrCode id="qrcode"/>
 </template>
 
 <style lang="scss" scoped>
+
+.icon {
+  display: inline-block;
+}
 
 // align center vertically
 #actionPrimary {

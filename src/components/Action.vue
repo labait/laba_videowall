@@ -3,6 +3,7 @@ import { ref, onMounted, computed, toRaw } from 'vue'
 
 const props = defineProps({
   text: String,
+  iconClass: String
 })  
 
 const emits = defineEmits(['click'])
@@ -16,9 +17,11 @@ const emits = defineEmits(['click'])
       event.preventDefault();
       emits('click', event)
     }"
-  >{{ text }}</a>
+  >
+  <slot/>
+  {{ text }}
+  </a>
 </template>
 
 <style scoped lang="scss">
-
 </style>
